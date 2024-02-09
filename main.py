@@ -20,10 +20,37 @@ class MyWidget(QMainWindow):
         self.fname = ''
         self.main()
         self.curr_image = QImage
+        self.pushButton.clicked.connect(self.change)
         self.image = QLabel(self)
         self.image.move(100, 15)
         self.image.resize(500, 400)
         self.image.setPixmap(self.pixmap)
+
+    def change(self):
+        self.lat = self.coordy.text()
+        self.lon = self.coordy_2.text()
+        self.scale = (self.zoomindex.text(),self.zoomindex.text())
+        self.ll = str(self.lon) + "," + str(self.lat)
+        print(self.lat)
+        self.load_map()
+
+    def load_map(self):
+        try:
+            size1 = f'{self.scale[0]},{self.scale[1]}'
+            print(size1)
+            map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&spn={z}&l={type}".format(ll=str(self.ll), z=str(size1),
+                                                                                            type='map')
+            response = requests.get(map_request).content
+            self.pixmap.loadFromData(response)
+            self.image.setPixmap(self.pixmap)
+            if not response:
+                print("Ошибка выполнения запроса:")
+                print(map_request)
+                print("Http статус:", response.status_code, "(", response.reason, ")")
+                sys.exit(1)
+        except Exception:
+            print('yoi')
+
 
     def main(self):
         # Пусть наше приложение предполагает запуск:
@@ -47,7 +74,7 @@ class MyWidget(QMainWindow):
         # Преобразуем ответ в json-объект
 
         json_response = response.json()
-        size = test.sizer(json_response)
+        self.size = test.sizer(json_response)
 
         # Получаем первый топоним из ответа геокодера.
         toponym = json_response["response"]["GeoObjectCollection"][
@@ -61,7 +88,7 @@ class MyWidget(QMainWindow):
         # Собираем параметры для запроса к StaticMapsAPI:
         map_params = {
             "ll": ",".join([toponym_longitude, toponym_lattitude]),
-            "spn": ",".join([str(size[0]), str(size[1])]),
+            "spn": ",".join([str(self.size[0]), str(self.size[1])]),
             "l": "map",
             "pt": "{0},pm2dgl".format(','.join(toponym_coodrinates.split()))
         }

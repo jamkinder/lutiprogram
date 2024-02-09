@@ -54,7 +54,7 @@
      <rect>
       <x>200</x>
       <y>430</y>
-      <width>160</width>
+      <width>236</width>
       <height>80</height>
      </rect>
     </property>
@@ -63,6 +63,13 @@
       <widget class="QLabel" name="zoomindexname">
        <property name="text">
         <string>Масштаб:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Вписывается одно число (оно зеркалируется)</string>
        </property>
       </widget>
      </item>
@@ -82,6 +89,19 @@
     </property>
     <property name="text">
      <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>520</y>
+      <width>81</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Подтвердить</string>
     </property>
    </widget>
   </widget>
