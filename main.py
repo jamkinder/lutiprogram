@@ -42,22 +42,46 @@ class MyWidget(QMainWindow):
                     ilem -= ilem / 2
                     self.scale[elem] = str(ilem)
                 self.load_map()
+        if event.key() == Qt.Key_Y:
+            print(self.lat)
+            if float(self.lat) <= 80 and float(self.scale[0]) < 45:
+                self.lat = str(float(self.lat) + float(self.scale[0]) / 3)
+                self.load_map()
+        if event.key() == Qt.Key_H:
+            if float(self.lat) > -65 and float(self.scale[0]) < 45:
+                self.lat = str(float(self.lat) - float(self.scale[0]) / 3)
+                self.load_map()
+        if event.key() == Qt.Key_J:
+            self.lon = str(float(self.lon) + float(self.scale[0]) / 3)
+            self.load_map()
+        if event.key() == Qt.Key_G:
+            self.lon = str(float(self.lon) - float(self.scale[0]) / 3)
+            self.load_map()
 
     # code
     def change(self):
         self.lat = self.coordy.text()
         self.lon = self.coordy_2.text()
-        self.scale = [self.zoomindex.text(),self.zoomindex.text()]
+        self.scale = [self.zoomindex.text(), self.zoomindex.text()]
+        if self.lat == '':
+            self.lat = '0'
+        if self.lon == '':
+            self.lon = '0'
         self.ll = str(self.lon) + "," + str(self.lat)
         print(self.lat)
+        print(self.scale)
+        if self.scale == ['', '']:
+            self.scale = ['0.001', '0.001']
         self.load_map()
 
     def load_map(self):
         try:
             size1 = f'{self.scale[0]},{self.scale[1]}'
+            self.ll = str(self.lon) + "," + str(self.lat)
             print(size1)
-            map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&spn={z}&l={type}".format(ll=str(self.ll), z=str(size1),
-                                                                                            type='map')
+            map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&spn={z}&l={type}".format(ll=str(self.ll),
+                                                                                              z=str(size1),
+                                                                                              type='map')
             response = requests.get(map_request).content
             self.pixmap.loadFromData(response)
             self.image.setPixmap(self.pixmap)
@@ -68,7 +92,6 @@ class MyWidget(QMainWindow):
                 sys.exit(1)
         except Exception:
             print('yoi')
-
 
     def main(self):
         # Пусть наше приложение предполагает запуск:
