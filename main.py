@@ -6,6 +6,7 @@ from io import BytesIO
 # Этот класс поможет нам сделать картинку из потока байт
 from PyQt5 import uic  # Импортируем uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5.QtCore import Qt
 from PyQt5 import QtCore
 from PyQt5.QtGui import QPainter, QColor, QPixmap, QImage
 from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QInputDialog, QLabel, QFileDialog
@@ -26,10 +27,27 @@ class MyWidget(QMainWindow):
         self.image.resize(500, 400)
         self.image.setPixmap(self.pixmap)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_W:
+            if float(self.scale[0]) <= 59:
+                for elem in range(len(self.scale)):
+                    ilem = float(self.scale[elem])
+                    ilem += ilem / 2
+                    self.scale[elem] = str(ilem)
+                self.load_map()
+        if event.key() == Qt.Key_S:
+            if float(self.scale[0]) > 0.000000001:
+                for elem in range(len(self.scale)):
+                    ilem = float(self.scale[elem])
+                    ilem -= ilem / 2
+                    self.scale[elem] = str(ilem)
+                self.load_map()
+
+    # code
     def change(self):
         self.lat = self.coordy.text()
         self.lon = self.coordy_2.text()
-        self.scale = (self.zoomindex.text(),self.zoomindex.text())
+        self.scale = [self.zoomindex.text(),self.zoomindex.text()]
         self.ll = str(self.lon) + "," + str(self.lat)
         print(self.lat)
         self.load_map()
